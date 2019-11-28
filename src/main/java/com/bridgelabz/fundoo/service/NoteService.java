@@ -5,10 +5,10 @@ import com.bridgelabz.fundoo.model.Note;
 
 public interface NoteService {
 	
-	Note create(NoteDTO noteDTO);
+	boolean  isCreated(NoteDTO noteDTO);
 	
-	Note update(NoteDTO noteDTO);
+	boolean isUpdated(Integer id,NoteDTO noteDTO);
 	
-	Note delete(Integer noteId);
+	boolean isDeleted(Integer noteId);
 
 }

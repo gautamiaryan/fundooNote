@@ -6,11 +6,11 @@ import com.bridgelabz.fundoo.model.Note;
 
 public interface NoteDAO {
 	
-	void createNote(Note note);
+	Note createNote(Note note);
 	
-	void updateNote(Note note);
+	Note updateNote(Integer noteId,Note note);
 	
-	void deleteNote(Integer noteId);
+	Note deleteNote(Integer noteId);
 	
 	Note getNoteById(Integer noteId);
 	
