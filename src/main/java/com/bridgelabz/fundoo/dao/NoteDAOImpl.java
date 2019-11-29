@@ -20,8 +20,10 @@ public class NoteDAOImpl implements NoteDAO {
 	@Override
 	public Note createNote(Note note) {
 		Session currentSession = entityManager.unwrap(Session.class);
-		int id = 0;
-		id = (int) currentSession.save(note);
+		Integer id;
+		System.out.println();
+		id = (Integer)currentSession.save(note);
+		System.out.println(id);
 		if (id != 0) {
 			return note;
 		}

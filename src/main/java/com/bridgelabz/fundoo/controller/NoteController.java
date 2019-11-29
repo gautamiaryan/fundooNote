@@ -17,7 +17,7 @@ import com.bridgelabz.fundoo.service.NoteService;
 
 @RestController
 @RequestMapping("/note")
-public class Controller {
+public class NoteController {
 	
 	@Autowired
 	private NoteService noteService;

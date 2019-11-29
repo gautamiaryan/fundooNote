@@ -51,6 +51,4 @@ public class Note {
 	@Column
 	private LocalDateTime updatedStamp;
 	
-	
-
 }
