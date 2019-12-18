@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.bridgelabz.fundoo.model.Note;
 
 @Repository
-public class NoteDAOImpl implements NoteDAO {
+public class NoteDAOImpl implements INoteDAO {
 
 	@Autowired
 	private EntityManager entityManager;
@@ -21,9 +21,7 @@ public class NoteDAOImpl implements NoteDAO {
 	public Note createNote(Note note) {
 		Session currentSession = entityManager.unwrap(Session.class);
 		Integer id;
-		System.out.println();
 		id = (Integer)currentSession.save(note);
-		System.out.println(id);
 		if (id != 0) {
 			return note;
 		}
@@ -66,8 +64,7 @@ public class NoteDAOImpl implements NoteDAO {
 	@Override
 	public List<Note> getAllNotes() {
 		Session currentSession = entityManager.unwrap(Session.class);
-
-		Query<Note> query = currentSession.createQuery("from User", Note.class);
+		Query<Note> query = currentSession.createQuery("from Note", Note.class);
 		List<Note> noteList = query.getResultList();
 		return noteList;
 

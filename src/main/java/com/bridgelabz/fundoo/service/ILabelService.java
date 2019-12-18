@@ -1,12 +1,17 @@
 package com.bridgelabz.fundoo.service;
 
-import com.bridgelabz.fundoo.dto.LabelDTO;
+import java.util.List;
 
-public interface LabelService {
+import com.bridgelabz.fundoo.dto.LabelDTO;
+import com.bridgelabz.fundoo.model.Label;
+
+public interface ILabelService {
 	
 	boolean isCreated(LabelDTO labelDTO);
 	
 	boolean isDeleted(Integer labelId);
 	
 	boolean isUpadated(Integer labelId,LabelDTO labelDTO);
+	
+	List<Label> getAllLabel();
 }

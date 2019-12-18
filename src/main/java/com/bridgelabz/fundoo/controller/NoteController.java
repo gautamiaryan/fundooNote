@@ -1,10 +1,13 @@
 package com.bridgelabz.fundoo.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,42 +15,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoo.dto.NoteDTO;
+import com.bridgelabz.fundoo.model.Note;
 import com.bridgelabz.fundoo.response.Response;
-import com.bridgelabz.fundoo.service.NoteService;
+import com.bridgelabz.fundoo.service.INoteService;
+
+import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/note")
+@Api(value = "Fundoo Notes ")
 public class NoteController {
 	
 	@Autowired
-	private NoteService noteService;
+	private INoteService noteService;
 	
-	@PostMapping("/create")
+	@PostMapping("/notes/create")
 	public ResponseEntity<Response> create(@Valid @RequestBody NoteDTO noteDTO){
-		if(noteService.isCreated(noteDTO)) {
-			return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), "Successfully created"),HttpStatus.OK);
-		}
-		return new ResponseEntity<Response>(new Response(HttpStatus.BAD_REQUEST.value(),"Unsuccessfull"),HttpStatus.BAD_REQUEST);
+		noteService.create(noteDTO);
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "Successfully created"),HttpStatus.OK);
+		
 		
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/notes/delete/{id}")
 	public ResponseEntity<Response> delete(@PathVariable Integer id){
-		if(noteService.isDeleted(id)) {
-			return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(),"Successfully deleted id number"+id),HttpStatus.OK);
-		}
-		return new ResponseEntity<Response>(new Response(HttpStatus.BAD_REQUEST.value(),"Note with id numer"+id),HttpStatus.BAD_REQUEST);
+		    noteService.delete(id);
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully deleted id number"+id),HttpStatus.OK);
+		
 		
 	}
 	
-	@PostMapping("/update/{id}")
+	@PostMapping("/notes/update/{id}")
 	public ResponseEntity<Response> update(@PathVariable Integer id,@RequestBody NoteDTO noteDTO){
-		if(noteService.isUpdated(id, noteDTO)) {
-		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(),"Successfully updated id number"+id),HttpStatus.OK);
-		}
-		return new ResponseEntity<Response>(new Response(HttpStatus.BAD_REQUEST.value(),"Not updated Note with id numer"+id),HttpStatus.BAD_REQUEST);
-
+		noteService.update(id, noteDTO);
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully updated id number"+id),HttpStatus.OK);
 		
+	}
+	
+	@GetMapping("/notes")
+	public ResponseEntity<Response> getAllNotes(){
+		List<Note> noteList=noteService.showAllNotes();
+		if(noteList.isEmpty()) {
+			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"List is Empty",noteList),HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"List of Notes ",noteList),HttpStatus.OK);
+
 	}
 	
 	

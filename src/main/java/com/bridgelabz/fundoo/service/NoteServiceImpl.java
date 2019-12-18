@@ -1,35 +1,36 @@
 package com.bridgelabz.fundoo.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoo.dao.NoteDAO;
+import com.bridgelabz.fundoo.dao.INoteDAO;
 import com.bridgelabz.fundoo.dto.NoteDTO;
 import com.bridgelabz.fundoo.model.Note;
 
 @Service
-public class NoteServiceImpl implements NoteService {
+public class NoteServiceImpl implements INoteService {
 
 	@Autowired
-	private NoteDAO noteDAO;
+	private INoteDAO noteDAO;
 
 	@Transactional
 	@Override
-	public boolean isCreated(NoteDTO noteDTO) {
+	public String create(NoteDTO noteDTO) {
 		Note note = noteDTOToNote(noteDTO);
 		Note noteObj = noteDAO.createNote(note);
 		if (noteObj != null) {
-			return true;
+			return "Note is Created";
 		}
-		return false;
+		return "Note is not Created";
 	}
 
 	@Transactional
 	@Override
-	public boolean isUpdated(Integer noteId, NoteDTO noteDTO) {
+	public String update(Integer noteId, NoteDTO noteDTO) {
 		Note note = noteDAO.getNoteById(noteId);
 		if (noteDTO.getTitle() != null) {
 			note.setTitle(noteDTO.getTitle());
@@ -39,16 +40,20 @@ public class NoteServiceImpl implements NoteService {
 		}
         note.setUpdatedStamp(LocalDateTime.now());
 		if (noteDAO.updateNote(noteId, note) != null) {
-			return true;
+			return "Note is updated";
 		}
-		return false;
+		return "Note is not updated";
+		
 	}
 
 	@Transactional
 	@Override
-	public boolean isDeleted(Integer noteId) {
-		noteDAO.deleteNote(noteId);
-		return true;
+	public String delete(Integer noteId) {
+		Note note=noteDAO.deleteNote(noteId);
+		if(note!=null) {
+			return "Note is deleted";
+		}
+		return "Note is not found";
 	}
 
 	public Note noteDTOToNote(NoteDTO noteDTO) {
@@ -63,6 +68,15 @@ public class NoteServiceImpl implements NoteService {
 		note.setRemaindMe(LocalDateTime.now());
 		return note;
 
+	}
+
+	@Override
+	public List<Note> showAllNotes() {
+		List<Note> noteList=noteDAO.getAllNotes();
+		if(noteList!=null) {
+			return noteList;
+		}
+		return null;
 	}
 
 }

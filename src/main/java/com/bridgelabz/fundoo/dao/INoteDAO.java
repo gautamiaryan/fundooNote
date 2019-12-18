@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bridgelabz.fundoo.model.Note;
 
-public interface NoteDAO {
+public interface INoteDAO {
 	
 	Note createNote(Note note);
 	

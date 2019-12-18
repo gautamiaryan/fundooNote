@@ -1,17 +1,19 @@
 package com.bridgelabz.fundoo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoo.dao.LabelDAO;
+import com.bridgelabz.fundoo.dao.ILabelDAO;
 import com.bridgelabz.fundoo.dto.LabelDTO;
 import com.bridgelabz.fundoo.model.Label;
 @Service
-public class LabelServiceImpl implements LabelService{
+public class LabelServiceImpl implements ILabelService{
 	
 	@Autowired
-	private LabelDAO labelDAO;
+	private ILabelDAO labelDAO;
 	
     @Transactional
 	@Override
@@ -49,6 +51,10 @@ public class LabelServiceImpl implements LabelService{
 		label.setName(labelDTO.getName());
 		return label;
 		
+	}
+	@Override
+	public List<Label> getAllLabel() {
+		return labelDAO.getAllLabel();
 	}
 	
 
