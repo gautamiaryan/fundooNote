@@ -17,7 +17,7 @@ public class LabelServiceImpl implements ILabelService{
 	
     @Transactional
 	@Override
-	public boolean isCreated(LabelDTO labelDTO) {
+	public boolean isCreated(LabelDTO labelDTO,String token) {
 		Label label=labelDTOToLabel(labelDTO);
 		Label labelObj=labelDAO.create(label);
 		if(labelObj!=null) {
@@ -27,7 +27,7 @@ public class LabelServiceImpl implements ILabelService{
 	}
     @Transactional
 	@Override
-	public boolean isDeleted(Integer labelId) {
+	public boolean isDeleted(Integer labelId,String token) {
 		Label label=labelDAO.delete(labelId);
 		if(label!=null) {
 			return true;
@@ -36,7 +36,7 @@ public class LabelServiceImpl implements ILabelService{
 	}
     @Transactional
 	@Override
-	public boolean isUpadated(Integer labelId, LabelDTO labelDTO) {
+	public boolean isUpadated(Integer labelId, LabelDTO labelDTO,String token) {
 		Label labelObj=labelDTOToLabel(labelDTO);
 		Label label=labelDAO.update(labelId, labelObj);
 		if(label!=null) {
@@ -53,9 +53,9 @@ public class LabelServiceImpl implements ILabelService{
 		
 	}
 	@Override
-	public List<Label> getAllLabel() {
+	public List<Label> getAllLabel(String token) {
 		return labelDAO.getAllLabel();
 	}
 	
-
+	
 }

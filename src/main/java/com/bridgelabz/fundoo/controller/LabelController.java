@@ -3,6 +3,7 @@ package com.bridgelabz.fundoo.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,25 +31,25 @@ public class LabelController {
 	private ILabelService labelService;
 	
 	@PostMapping("labels/create")
-	public ResponseEntity<Response> create(@Valid @RequestBody LabelDTO labelDTO){
+	public ResponseEntity<Response> create(@Valid @RequestBody LabelDTO labelDTO,@PathParam("token") String token){
 		
-		if(labelService.isCreated(labelDTO)) {
+		if(labelService.isCreated(labelDTO,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Label successfully create"),HttpStatus.OK);
 		}
 		 return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Label not created"),HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping("labels/update/{labelId}")
-	public ResponseEntity<Response> update(@Valid @PathVariable Integer labelId,@RequestBody LabelDTO labelDTO){
-		if(labelService.isUpadated(labelId, labelDTO)) {
+	public ResponseEntity<Response> update(@Valid @PathVariable Integer labelId,@RequestBody LabelDTO labelDTO,@PathParam("token") String token){
+		if(labelService.isUpadated(labelId, labelDTO,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully Updated"),HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Label not updated"),HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("labels/delete/{labelId}")
-	public ResponseEntity<Response> delete(@Valid @PathVariable Integer labelId){
-		if(labelService.isDeleted(labelId)) {
+	public ResponseEntity<Response> delete(@Valid @PathVariable Integer labelId,String token){
+		if(labelService.isDeleted(labelId,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Sucessfully deleted"),HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"label with this id not found"),HttpStatus.BAD_REQUEST);
@@ -56,13 +57,12 @@ public class LabelController {
 	}
 	
 	@GetMapping("/labels")
-	public ResponseEntity<Response> getAllLabel(){
-		List<Label> labelList=labelService.getAllLabel();
+	public ResponseEntity<Response> getAllLabel(@PathParam("token") String token){
+		List<Label> labelList=labelService.getAllLabel(token);
 		if(labelList.isEmpty()) {
 			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"No label found"),HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"No label found",labelList),HttpStatus.OK);
-
 	}
 
 }

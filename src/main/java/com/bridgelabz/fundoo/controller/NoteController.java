@@ -3,6 +3,8 @@ package com.bridgelabz.fundoo.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,32 +30,31 @@ public class NoteController {
 	@Autowired
 	private INoteService noteService;
 	
-	@PostMapping("/notes/create")
-	public ResponseEntity<Response> create(@Valid @RequestBody NoteDTO noteDTO){
-		noteService.create(noteDTO);
+	@PostMapping("/notes/create/{token}")
+	public ResponseEntity<Response> create(@Valid @RequestBody NoteDTO noteDTO,@PathVariable String token){
+		noteService.create(noteDTO,token);
 		return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "Successfully created"),HttpStatus.OK);
-		
 		
 	}
 	
 	@DeleteMapping("/notes/delete/{id}")
-	public ResponseEntity<Response> delete(@PathVariable Integer id){
-		    noteService.delete(id);
+	public ResponseEntity<Response> delete(@PathVariable Integer id ,@PathParam("token") String token){
+		    noteService.delete(id,token);
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully deleted id number"+id),HttpStatus.OK);
 		
 		
 	}
 	
 	@PostMapping("/notes/update/{id}")
-	public ResponseEntity<Response> update(@PathVariable Integer id,@RequestBody NoteDTO noteDTO){
-		noteService.update(id, noteDTO);
+	public ResponseEntity<Response> update( @PathVariable Integer id,@RequestBody NoteDTO noteDTO,@PathParam("token") String token){
+		noteService.update(id, noteDTO,token);
 		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully updated id number"+id),HttpStatus.OK);
 		
 	}
 	
 	@GetMapping("/notes")
-	public ResponseEntity<Response> getAllNotes(){
-		List<Note> noteList=noteService.showAllNotes();
+	public ResponseEntity<Response> getAllNotes(String token){
+		List<Note> noteList=noteService.showAllNotes(token);
 		if(noteList.isEmpty()) {
 			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"List is Empty",noteList),HttpStatus.BAD_REQUEST);
 		}

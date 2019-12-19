@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="noteDetails")
+@Table(name="note_Details")
 @Getter
 @Setter
 public class Note {
@@ -51,7 +51,5 @@ public class Note {
 	
 	@Column
 	private LocalDateTime updatedStamp;
-	
-	
 	
 }

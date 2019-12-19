@@ -3,6 +3,7 @@ package com.bridgelabz.fundoo.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,17 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bridgelabz.fundoo.dao.INoteDAO;
 import com.bridgelabz.fundoo.dto.NoteDTO;
 import com.bridgelabz.fundoo.model.Note;
+import com.bridgelabz.fundoo.util.JWTProvider;
 
 @Service
 public class NoteServiceImpl implements INoteService {
 
 	@Autowired
 	private INoteDAO noteDAO;
-
+	
+	/*
+	 * @Autowired private JWTProvider jwtProvider;
+	 */
+//	@Autowired
+//	private ModelMapper modelMapper;
+	
 	@Transactional
 	@Override
-	public String create(NoteDTO noteDTO) {
-		Note note = noteDTOToNote(noteDTO);
+	public String create(NoteDTO noteDTO,String tocken) {
+		
+		Note note =noteDTOToNote(noteDTO);
 		Note noteObj = noteDAO.createNote(note);
 		if (noteObj != null) {
 			return "Note is Created";
@@ -30,7 +39,7 @@ public class NoteServiceImpl implements INoteService {
 
 	@Transactional
 	@Override
-	public String update(Integer noteId, NoteDTO noteDTO) {
+	public String update(Integer noteId, NoteDTO noteDTO,String token) {
 		Note note = noteDAO.getNoteById(noteId);
 		if (noteDTO.getTitle() != null) {
 			note.setTitle(noteDTO.getTitle());
@@ -48,7 +57,7 @@ public class NoteServiceImpl implements INoteService {
 
 	@Transactional
 	@Override
-	public String delete(Integer noteId) {
+	public String delete(Integer noteId,String token) {
 		Note note=noteDAO.deleteNote(noteId);
 		if(note!=null) {
 			return "Note is deleted";
@@ -71,7 +80,7 @@ public class NoteServiceImpl implements INoteService {
 	}
 
 	@Override
-	public List<Note> showAllNotes() {
+	public List<Note> showAllNotes(String token) {
 		List<Note> noteList=noteDAO.getAllNotes();
 		if(noteList!=null) {
 			return noteList;

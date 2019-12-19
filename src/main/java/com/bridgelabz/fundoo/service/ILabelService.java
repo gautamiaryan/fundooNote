@@ -7,11 +7,11 @@ import com.bridgelabz.fundoo.model.Label;
 
 public interface ILabelService {
 	
-	boolean isCreated(LabelDTO labelDTO);
+	boolean isCreated(LabelDTO labelDTO,String token);
 	
-	boolean isDeleted(Integer labelId);
+	boolean isDeleted(Integer labelId,String token);
 	
-	boolean isUpadated(Integer labelId,LabelDTO labelDTO);
+	boolean isUpadated(Integer labelId,LabelDTO labelDTO,String token);
 	
-	List<Label> getAllLabel();
+	List<Label> getAllLabel(String token);
 }
