@@ -17,23 +17,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="label_detals")
+@Table(name="label_details")
 @Getter
 @Setter
 public class Label {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column()
-	private Integer id;
+	@Column(name="label_id")
+	private Integer labelId;
 	
-	@Column
+	@Column(name="label_name")
 	private String name;
 	
-	@Column
+	@Column(name="user_id")
     private Integer user_id;
 	
+	@JoinColumn(name="user_id")
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="note_details",joinColumns = {@JoinColumn(name="id")},inverseJoinColumns = {@JoinColumn(name="id")})
+    @JoinTable(name="note_label",joinColumns = {@JoinColumn(name="label_id")},inverseJoinColumns = {@JoinColumn(name="note_id")})
     private List<Note> noteList;
     
 }

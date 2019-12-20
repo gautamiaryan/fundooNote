@@ -1,8 +1,11 @@
 package com.bridgelabz.fundoo.util;
 
+import org.springframework.stereotype.Component;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+@Component
 public class JWTProvider {
 	private final String secret = "Gautam";
 

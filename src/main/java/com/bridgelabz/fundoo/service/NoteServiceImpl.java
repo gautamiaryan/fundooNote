@@ -19,6 +19,9 @@ public class NoteServiceImpl implements INoteService {
 	@Autowired
 	private INoteDAO noteDAO;
 	
+	@Autowired(required=true)
+	private JWTProvider jwtProvider;
+	
 	/*
 	 * @Autowired private JWTProvider jwtProvider;
 	 */
@@ -30,7 +33,8 @@ public class NoteServiceImpl implements INoteService {
 	public String create(NoteDTO noteDTO,String tocken) {
 		
 		Note note =noteDTOToNote(noteDTO);
-		Note noteObj = noteDAO.createNote(note);
+		String email=jwtProvider.parseToken(tocken);
+		Note noteObj = noteDAO.createNote(note,email);
 		if (noteObj != null) {
 			return "Note is Created";
 		}
@@ -48,7 +52,7 @@ public class NoteServiceImpl implements INoteService {
 			note.setDescription(noteDTO.getDescription());
 		}
         note.setUpdatedStamp(LocalDateTime.now());
-		if (noteDAO.updateNote(noteId, note) != null) {
+		if (noteDAO.updateNote(noteId, note,token) != null) {
 			return "Note is updated";
 		}
 		return "Note is not updated";
@@ -58,7 +62,7 @@ public class NoteServiceImpl implements INoteService {
 	@Transactional
 	@Override
 	public String delete(Integer noteId,String token) {
-		Note note=noteDAO.deleteNote(noteId);
+		Note note=noteDAO.deleteNote(noteId,token);
 		if(note!=null) {
 			return "Note is deleted";
 		}
@@ -71,17 +75,18 @@ public class NoteServiceImpl implements INoteService {
 		note.setDescription(noteDTO.getDescription());
 		note.setPinned(false);
 		note.setTrashed(false);
+		note.setArchieve(false);
 		note.setColor(null);
 		note.setCreatedStamp(LocalDateTime.now());
 		note.setUpdatedStamp(LocalDateTime.now());
-		note.setRemaindMe(LocalDateTime.now());
+		note.setRemainder(LocalDateTime.now());
 		return note;
 
 	}
 
 	@Override
 	public List<Note> showAllNotes(String token) {
-		List<Note> noteList=noteDAO.getAllNotes();
+		List<Note> noteList=noteDAO.getAllNotes(token);
 		if(noteList!=null) {
 			return noteList;
 		}

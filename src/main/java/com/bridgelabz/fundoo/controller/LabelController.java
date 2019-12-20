@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class LabelController {
 	private ILabelService labelService;
 	
 	@PostMapping("labels/create")
-	public ResponseEntity<Response> create(@Valid @RequestBody LabelDTO labelDTO,@PathParam("token") String token){
+	public ResponseEntity<Response> create(@Valid @RequestBody LabelDTO labelDTO,@RequestHeader String token){
 		
 		if(labelService.isCreated(labelDTO,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Label successfully create"),HttpStatus.OK);
@@ -40,7 +41,7 @@ public class LabelController {
 	}
 	
 	@PostMapping("labels/update/{labelId}")
-	public ResponseEntity<Response> update(@Valid @PathVariable Integer labelId,@RequestBody LabelDTO labelDTO,@PathParam("token") String token){
+	public ResponseEntity<Response> update(@Valid @PathVariable Integer labelId,@RequestBody LabelDTO labelDTO,@RequestHeader String token){
 		if(labelService.isUpadated(labelId, labelDTO,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully Updated"),HttpStatus.OK);
 		}
@@ -48,7 +49,7 @@ public class LabelController {
 	}
 	
 	@DeleteMapping("labels/delete/{labelId}")
-	public ResponseEntity<Response> delete(@Valid @PathVariable Integer labelId,String token){
+	public ResponseEntity<Response> delete(@Valid @PathVariable Integer labelId,@RequestHeader String token){
 		if(labelService.isDeleted(labelId,token)) {
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Sucessfully deleted"),HttpStatus.OK);
 		}
@@ -57,7 +58,7 @@ public class LabelController {
 	}
 	
 	@GetMapping("/labels")
-	public ResponseEntity<Response> getAllLabel(@PathParam("token") String token){
+	public ResponseEntity<Response> getAllLabel(@RequestHeader String token){
 		List<Label> labelList=labelService.getAllLabel(token);
 		if(labelList.isEmpty()) {
 			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"No label found"),HttpStatus.BAD_REQUEST);

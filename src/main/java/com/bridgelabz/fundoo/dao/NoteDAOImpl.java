@@ -16,10 +16,12 @@ public class NoteDAOImpl implements INoteDAO {
 
 	@Autowired
 	private EntityManager entityManager;
-
+    
 	@Override
-	public Note createNote(Note note) {
-		Session currentSession = entityManager.unwrap(Session.class);
+	public Note createNote(Note note,String tocken) {
+		Session currentSession=entityManager.unwrap(Session.class);  
+	    Long user_Id=Long.valueOf(tocken);
+	    note.setUserId(user_Id);
 		Integer id;
 		id = (Integer)currentSession.save(note);
 		if (id != 0) {
@@ -30,10 +32,11 @@ public class NoteDAOImpl implements INoteDAO {
 	}
 
 	@Override
-	public Note updateNote(Integer noteId,Note note) {
+	public Note updateNote(Integer noteId,Note note,String token) {
 		Session currentSession = entityManager.unwrap(Session.class);
 		Note noteObj = currentSession.get(Note.class, noteId);
 		if(noteObj!=null) {
+			note.setUserId(Long.valueOf(token));
 			currentSession.update(note);
 			return note;
 		}
@@ -42,16 +45,17 @@ public class NoteDAOImpl implements INoteDAO {
 	}
 
 	@Override
-	public Note deleteNote(Integer noteId) {
+	public Note deleteNote(Integer noteId,String token) {
 
 		Session currentSession = entityManager.unwrap(Session.class);
 		Note note = currentSession.get(Note.class, noteId);
+		
 		if(note!=null) {
+		  note.setUserId(Long.valueOf(token));
 		  currentSession.delete(note);
 		  return note;
 		}
 		return note;
-
 	}
 
 	@Override
@@ -62,12 +66,12 @@ public class NoteDAOImpl implements INoteDAO {
 	}
 
 	@Override
-	public List<Note> getAllNotes() {
+	public List<Note> getAllNotes(String token) {
+		Long user_id=Long.valueOf(token);
 		Session currentSession = entityManager.unwrap(Session.class);
-		Query<Note> query = currentSession.createQuery("from Note", Note.class);
+		Query<Note> query = currentSession.createQuery("from Note where user_id="+user_id, Note.class);
 		List<Note> noteList = query.getResultList();
 		return noteList;
-
 	}
 
 }

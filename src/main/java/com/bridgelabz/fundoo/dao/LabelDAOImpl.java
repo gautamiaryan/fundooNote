@@ -17,7 +17,7 @@ public class LabelDAOImpl  implements ILabelDAO{
 	private EntityManager entityManager;
 
 	@Override
-	public Label create(Label label) {
+	public Label create(Label label,String token) {
 		Session currentSession=entityManager.unwrap(Session.class);
 		int status=0;
 		status=(int) currentSession.save(label);
@@ -28,7 +28,7 @@ public class LabelDAOImpl  implements ILabelDAO{
 	}
 
 	@Override
-	public Label delete(Integer labelId) {
+	public Label delete(Integer labelId,String token) {
 		Session currentSession=entityManager.unwrap(Session.class);
 		Label label=currentSession.get(Label.class, labelId);
 		if(label!=null) {
@@ -39,7 +39,7 @@ public class LabelDAOImpl  implements ILabelDAO{
 	}
 
 	@Override
-	public Label update(Integer labelId, Label label) {
+	public Label update(Integer labelId, Label label,String token) {
 		Session currentSession=entityManager.unwrap(Session.class);
 		Label labelObj=currentSession.get(Label.class, labelId);
 		if(labelObj!=null) {
