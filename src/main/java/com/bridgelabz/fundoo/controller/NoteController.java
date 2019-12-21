@@ -40,7 +40,7 @@ public class NoteController {
 	}
 	
 	@DeleteMapping("/notes/delete/{id}")
-	public ResponseEntity<Response> delete(@PathVariable Integer id ,@RequestHeader String token){
+	public ResponseEntity<Response> delete(@PathVariable Long id ,@RequestHeader String token){
 		    noteService.delete(id,token);
 			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully deleted id number"+id),HttpStatus.OK);
 		
@@ -48,7 +48,7 @@ public class NoteController {
 	}
 	
 	@PostMapping("/notes/update/{id}")
-	public ResponseEntity<Response> update( @PathVariable Integer id,@RequestBody NoteDTO noteDTO,@RequestHeader String token){
+	public ResponseEntity<Response> update( @PathVariable Long id,@RequestBody NoteDTO noteDTO,@RequestHeader String token){
 		noteService.update(id, noteDTO,token);
 		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Successfully updated id number"+id),HttpStatus.OK);
 		

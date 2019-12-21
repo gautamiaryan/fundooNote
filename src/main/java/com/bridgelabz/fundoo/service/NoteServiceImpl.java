@@ -13,58 +13,61 @@ import com.bridgelabz.fundoo.dto.NoteDTO;
 import com.bridgelabz.fundoo.model.Note;
 import com.bridgelabz.fundoo.util.JWTProvider;
 
+import reactor.core.publisher.Mono;
+
 @Service
 public class NoteServiceImpl implements INoteService {
 
 	@Autowired
 	private INoteDAO noteDAO;
-	
-	@Autowired(required=true)
-	private JWTProvider jwtProvider;
-	
-	/*
-	 * @Autowired private JWTProvider jwtProvider;
-	 */
-//	@Autowired
-//	private ModelMapper modelMapper;
+
+	@Autowired
+	private WebClientService webClientService;
 	
 	@Transactional
 	@Override
-	public String create(NoteDTO noteDTO,String tocken) {
-		
-		Note note =noteDTOToNote(noteDTO);
-		String email=jwtProvider.parseToken(tocken);
-		Note noteObj = noteDAO.createNote(note,email);
-		if (noteObj != null) {
-			return "Note is Created";
+	public String create(NoteDTO noteDTO, String tocken) {
+		Long user_id = webClientService.getUserId(tocken);
+		if (user_id != 0) {
+			Note note = noteDTOToNote(noteDTO);
+			Note noteObj = noteDAO.createNote(note, user_id);
+			if (noteObj != null) {
+				return "Note is Created";
+			}
 		}
 		return "Note is not Created";
 	}
 
 	@Transactional
 	@Override
-	public String update(Integer noteId, NoteDTO noteDTO,String token) {
+	public String update(Long noteId, NoteDTO noteDTO, String token) {
 		Note note = noteDAO.getNoteById(noteId);
-		if (noteDTO.getTitle() != null) {
-			note.setTitle(noteDTO.getTitle());
-		}
-		if (noteDTO.getDescription() != null) {
-			note.setDescription(noteDTO.getDescription());
-		}
-        note.setUpdatedStamp(LocalDateTime.now());
-		if (noteDAO.updateNote(noteId, note,token) != null) {
-			return "Note is updated";
+		Long user_id = webClientService.getUserId(token);
+		if (user_id != 0) {
+			if (noteDTO.getTitle() != null) {
+				note.setTitle(noteDTO.getTitle());
+			}
+			if (noteDTO.getDescription() != null) {
+				note.setDescription(noteDTO.getDescription());
+			}
+			note.setUpdatedStamp(LocalDateTime.now());
+			if (noteDAO.updateNote(noteId, note, user_id) != null) {
+				return "Note is updated";
+			}
 		}
 		return "Note is not updated";
-		
+
 	}
 
 	@Transactional
 	@Override
-	public String delete(Integer noteId,String token) {
-		Note note=noteDAO.deleteNote(noteId,token);
-		if(note!=null) {
-			return "Note is deleted";
+	public String delete(Long noteId, String token) {
+		Long user_id = webClientService.getUserId(token);
+		if (user_id != 0) {
+			Note note = noteDAO.deleteNote(noteId,user_id);
+			if (note != null) {
+				return "Note is deleted";
+			}
 		}
 		return "Note is not found";
 	}
@@ -79,15 +82,16 @@ public class NoteServiceImpl implements INoteService {
 		note.setColor(null);
 		note.setCreatedStamp(LocalDateTime.now());
 		note.setUpdatedStamp(LocalDateTime.now());
-		note.setRemainder(LocalDateTime.now());
+		note.setRemainder(LocalDateTime.MAX);
 		return note;
 
 	}
 
 	@Override
 	public List<Note> showAllNotes(String token) {
-		List<Note> noteList=noteDAO.getAllNotes(token);
-		if(noteList!=null) {
+		
+		List<Note> noteList = noteDAO.getAllNotes(token);
+		if (noteList != null) {
 			return noteList;
 		}
 		return null;

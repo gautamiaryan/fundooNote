@@ -9,9 +9,9 @@ public interface INoteService {
 	
 	String create(NoteDTO noteDTO,String tocken);
 	
-	String  update(Integer id,NoteDTO noteDTO,String token);
+	String  update(Long id,NoteDTO noteDTO,String token);
 	
-	String  delete(Integer noteId,String token);
+	String  delete(Long noteId,String token);
 	
 	List<Note> showAllNotes(String token);
 

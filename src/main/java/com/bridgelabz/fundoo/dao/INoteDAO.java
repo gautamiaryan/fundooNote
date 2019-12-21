@@ -6,13 +6,13 @@ import com.bridgelabz.fundoo.model.Note;
 
 public interface INoteDAO {
 	
-	Note createNote(Note note,String token);
+	Note createNote(Note note,Long userId);
 	
-	Note updateNote(Integer noteId,Note note,String token);
+	Note updateNote(Long noteId,Note note,Long userId);
 	
-	Note deleteNote(Integer noteId,String token);
+	Note deleteNote(Long noteId,Long userId);
 	
-	Note getNoteById(Integer noteId);
+	Note getNoteById(Long noteId);
 	
 	List<Note> getAllNotes(String token);
 
