@@ -16,13 +16,13 @@ public class NoteDAOImpl implements INoteDAO {
 
 	@Autowired
 	private EntityManager entityManager;
-    
+
 	@Override
-	public Note createNote(Note note,Long userId) {
-		Session currentSession=entityManager.unwrap(Session.class);  
-	    note.setUserId(userId);
+	public Note createNote(Note note, Long userId) {
+		Session currentSession = entityManager.unwrap(Session.class);
+		note.setUserId(userId);
 		Integer id;
-		id = (Integer)currentSession.save(note);
+		id = (Integer) currentSession.save(note);
 		if (id != 0) {
 			return note;
 		}
@@ -31,10 +31,10 @@ public class NoteDAOImpl implements INoteDAO {
 	}
 
 	@Override
-	public Note updateNote(Long noteId,Note note,Long userId) {
+	public Note updateNote(Long noteId, Note note, Long userId) {
 		Session currentSession = entityManager.unwrap(Session.class);
 		Note noteObj = currentSession.get(Note.class, noteId);
-		if(noteObj!=null) {
+		if (noteObj != null) {
 			note.setUserId(userId);
 			currentSession.update(note);
 			return note;
@@ -44,15 +44,15 @@ public class NoteDAOImpl implements INoteDAO {
 	}
 
 	@Override
-	public Note deleteNote(Long noteId,Long userId) {
+	public Note deleteNote(Long noteId, Long userId) {
 
 		Session currentSession = entityManager.unwrap(Session.class);
 		Note note = currentSession.get(Note.class, noteId);
-		
-		if(note!=null) {
-		  note.setUserId(userId);
-		  currentSession.delete(note);
-		  return note;
+
+		if (note != null) {
+			note.setUserId(userId);
+			currentSession.delete(note);
+			return note;
 		}
 		return note;
 	}
@@ -66,11 +66,33 @@ public class NoteDAOImpl implements INoteDAO {
 
 	@Override
 	public List<Note> getAllNotes(String token) {
-		Long user_id=Long.valueOf(token);
+		Long user_id = Long.valueOf(token);
 		Session currentSession = entityManager.unwrap(Session.class);
-		Query<Note> query = currentSession.createQuery("from Note where user_id="+user_id, Note.class);
+		Query<Note> query = currentSession.createQuery("from Note where user_id=" + user_id, Note.class);
 		List<Note> noteList = query.getResultList();
 		return noteList;
+	}
+
+	@Override
+	public List<Note> getAllTrashed(Long userId) {
+		Session currentSession = entityManager.unwrap(Session.class);
+		Query<Note> query = currentSession.createQuery("from Note where user_id=" + userId + "and note_trash=true",
+				Note.class);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Note> getAllPinned(Long userId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Query<Note> query=currentSession.createQuery("from Note where user_id="+userId+"and note_archieve =true",Note.class);
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Note> getAllArchieved(Long userId) {
+		Session currentSession = entityManager.unwrap(Session.class);
+		Query<Note> query = currentSession.createQuery("from Note where user_id=" + userId + "and note_pin=true",Note.class);
+		return query.getResultList();
 	}
 
 }

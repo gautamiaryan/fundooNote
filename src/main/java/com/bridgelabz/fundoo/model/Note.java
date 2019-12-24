@@ -44,7 +44,7 @@ public class Note {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isPinned;
 	
-	@Column(name="note_archieve")
+	@Column(name="note_archieve",nullable = false)
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isArchieve;
 	
@@ -63,6 +63,9 @@ public class Note {
 	
 	@Column(name="user_id")
 	private Long userId;
+	
+	@Column(name="label_id")
+	private Long labelId;
 	
 	@JoinColumn(name="user_id")
     @ManyToMany(cascade = CascadeType.ALL)

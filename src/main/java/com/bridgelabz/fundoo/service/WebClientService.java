@@ -20,7 +20,6 @@ public class WebClientService {
 	}
 	
 	public Long getUserId(String token) {
-		System.out.println("web");
 		return  webClient.get()
 		         .uri("users/verify/"+token)
 		         .retrieve().bodyToMono(Long.class).block();

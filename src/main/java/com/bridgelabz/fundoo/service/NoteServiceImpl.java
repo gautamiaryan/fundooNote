@@ -82,11 +82,11 @@ public class NoteServiceImpl implements INoteService {
 		note.setColor(null);
 		note.setCreatedStamp(LocalDateTime.now());
 		note.setUpdatedStamp(LocalDateTime.now());
-		note.setRemainder(LocalDateTime.MAX);
+		note.setRemainder(LocalDateTime.now());
 		return note;
 
 	}
-
+    @Transactional
 	@Override
 	public List<Note> showAllNotes(String token) {
 		
@@ -95,6 +95,36 @@ public class NoteServiceImpl implements INoteService {
 			return noteList;
 		}
 		return null;
+	}
+    @Transactional
+	@Override
+	public List<Note> getArchieved(String token) {
+		Long userId=webClientService.getUserId(token);
+		List<Note> archievedNotes=null;
+		if(userId!=null) {
+			archievedNotes=noteDAO.getAllArchieved(userId);
+		}
+		return archievedNotes;
+	}
+    @Transactional
+	@Override
+	public List<Note> getTrashed(String token) {
+		Long userId=webClientService.getUserId(token);
+		List<Note> trashedNotes=null;
+		if(userId!=null) {
+			trashedNotes=noteDAO.getAllTrashed(userId);
+		}
+		return trashedNotes;
+	}
+    @Transactional
+	@Override
+	public List<Note> getPinned(String token) {
+		Long userId=webClientService.getUserId(token);
+		List<Note> pinnedNotes=null;
+		if(userId!=null) {
+			pinnedNotes=noteDAO.getAllPinned(userId);
+		}
+		return pinnedNotes;
 	}
 
 }

@@ -15,5 +15,13 @@ public interface INoteDAO {
 	Note getNoteById(Long noteId);
 	
 	List<Note> getAllNotes(String token);
+	
+	List<Note> getAllTrashed(Long userId);
+	
+	List<Note> getAllPinned(Long userId);
+	
+	List<Note> getAllArchieved(Long userId);
+	
+	
 
 }

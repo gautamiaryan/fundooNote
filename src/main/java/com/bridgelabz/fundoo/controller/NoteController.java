@@ -64,6 +64,34 @@ public class NoteController {
 
 	}
 	
+	@GetMapping("/trashednotes")
+	public ResponseEntity<Response> getTrashedNotes(@RequestHeader String token){
+		List<Note> trashedNotes=noteService.getTrashed(token);
+		if(trashedNotes.isEmpty()) {
+			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"List is Empty",trashedNotes),HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"List of Trashed notes",trashedNotes),HttpStatus.OK);
+	}
+	
+	@GetMapping("/archievednotes")
+	public ResponseEntity<Response> getArchievedNotes(@RequestHeader String token){
+		List<Note> archievedNotes=noteService.getTrashed(token);
+		if(archievedNotes.isEmpty()) {
+			return new ResponseEntity<> (new Response(HttpStatus.BAD_REQUEST.value(),"List is Empty",archievedNotes),HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"List of Archieved Notes",archievedNotes),HttpStatus.OK);
+	}
+	
+	@GetMapping("/pinnedNotes")
+	public ResponseEntity<Response> getPinnedNotes(@RequestHeader String token){
+		List<Note> pinnedNotes=noteService.getPinned(token);
+		if(pinnedNotes.isEmpty()) {
+			return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"List is Empty",pinnedNotes),HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"List of Pinned Notes",pinnedNotes),HttpStatus.OK);
+	}
+	
+	
 	
 	
 

@@ -14,5 +14,14 @@ public interface INoteService {
 	String  delete(Long noteId,String token);
 	
 	List<Note> showAllNotes(String token);
+	
+	List<Note> getArchieved(String token);
+	
+	List<Note> getTrashed(String token);
+    
+	List<Note> getPinned(String token);
+	
+	
+
 
 }

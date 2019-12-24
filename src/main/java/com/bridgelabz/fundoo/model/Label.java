@@ -24,13 +24,16 @@ public class Label {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="label_id")
-	private Integer labelId;
+	private Long labelId;
 	
 	@Column(name="label_name")
 	private String name;
 	
 	@Column(name="user_id")
-    private Integer user_id;
+    private Long user_id;
+	
+	@Column(name="note_id")
+	private Long noteId;
 	
 	@JoinColumn(name="user_id")
     @ManyToMany(cascade = CascadeType.ALL)
