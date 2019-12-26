@@ -126,5 +126,79 @@ public class NoteServiceImpl implements INoteService {
 		}
 		return pinnedNotes;
 	}
+    @Transactional
+	@Override
+	public boolean trashed(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+		if(noteDAO.setTrashed(userId, noteId)) {
+			return true;
+		}
+		return false;
+	}
+    @Transactional
+	@Override
+	public boolean restored(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+		if(noteDAO.setRestored(userId, noteId)) {
+			return true;
+		}
+		return false;
+	}
 
+	@Override
+	public boolean pinned(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+		if(noteDAO.setPinned(userId, noteId)) {
+			return true;
+		}
+		return false;
+	}
+	@Transactional
+	@Override
+	public boolean unPinned(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+		if(noteDAO.setUnpinned(userId, noteId)) {
+			return true;
+		}
+		return false;
+	}
+	@Transactional
+	@Override
+	public boolean archieved(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+        if(noteDAO.setArchieved(userId, noteId)) {
+        	return true;
+        }
+		return false;
+	}
+	@Transactional
+	@Override
+	public boolean unarchieved(String token, Long noteId) {
+		Long userId=webClientService.getUserId(token);
+        if(noteDAO.setUnachieved(userId, noteId)) {
+        	return true;
+        }
+		return false;
+	}
+    @Transactional
+	@Override
+	public boolean remindMe(String token, Long noteId, LocalDateTime time) {
+	    Long userId=webClientService.getUserId(token);
+	    if(noteDAO.setRemaineder(userId, noteId, time)) {
+	    	return true;
+	    }
+		return false;
+	}
+    @Transactional
+	@Override
+	public boolean setColor(String token, Long noteId, String color) {
+    	Long userId=webClientService.getUserId(token);
+		if(noteDAO.setColor(userId, noteId, color)) {
+			return true;
+		}
+		return false;
+	} 
+    
+    
+	
 }

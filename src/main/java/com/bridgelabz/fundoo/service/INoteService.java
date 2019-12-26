@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoo.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.bridgelabz.fundoo.dto.NoteDTO;
@@ -21,7 +22,23 @@ public interface INoteService {
     
 	List<Note> getPinned(String token);
 	
+	boolean trashed(String token,Long noteId);
 	
+	boolean restored(String token,Long noteId);
+	
+	boolean pinned(String token,Long noteId);
+	
+	boolean unPinned(String token,Long noteId);
+	
+	boolean archieved(String token,Long noteId);
+	
+	boolean unarchieved(String token,Long noteId);
+	
+	boolean remindMe(String token,Long noteId,LocalDateTime time);
+	
+	boolean setColor(String token,Long noteId,String color);
+	
+
 
 
 }

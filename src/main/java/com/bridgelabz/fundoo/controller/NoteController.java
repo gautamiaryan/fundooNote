@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoo.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -91,7 +91,73 @@ public class NoteController {
 		return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"List of Pinned Notes",pinnedNotes),HttpStatus.OK);
 	}
 	
+	@PostMapping("/notes/pinned/{noteId}")
+	public ResponseEntity<Response> pinned(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.pinned(token, noteId)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "Note is pinned"),HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Note is not pinned"),HttpStatus.BAD_REQUEST);
+	}
 	
+	@PostMapping("/notes/unpinned/{noteId}")
+	public ResponseEntity<Response> unpinned(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.unPinned(token, noteId)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Note is unpinned"),HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Note is not unpinned"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/notes/archieve/{noteId}")
+	public ResponseEntity<Response> archieved(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.archieved(token, noteId)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Note is Archieved"),HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Note is not Archieved"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/notes/unarchieved/{noteId}")
+	public ResponseEntity<Response> unarchieved(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.unarchieved(token, noteId)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Note is Unarchieved"),HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Note is Unarchieved"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/notes/trashed/{noteId}")
+	public ResponseEntity<Response> trashed(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.trashed(token, noteId)) {
+			return new ResponseEntity<> (new Response(HttpStatus.OK.value(),"Note is Trashed"),HttpStatus.OK);
+		}
+		return new ResponseEntity<> (new Response(HttpStatus.BAD_REQUEST.value(),"Note is Trashed"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/notes/restore/{noteId}")
+	public ResponseEntity<Response> restore(@RequestHeader String token,@PathVariable Long noteId){
+		if(noteService.restored(token, noteId)) {
+			return new ResponseEntity<> (new Response(HttpStatus.OK.value(),"Note is Restored"),HttpStatus.OK);
+		}
+		return new ResponseEntity<> (new Response(HttpStatus.BAD_REQUEST.value(),"Note is Trashed"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/note/remindme/{noteId}")
+	public ResponseEntity<Response> remindMe(@RequestHeader String token,@PathVariable Long noteId,@RequestParam(value="time") LocalDateTime time){
+		if(noteService.remindMe(token, noteId, time)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"Remainder set"),HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"Remainder is not set"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/note/color/{noteId}")
+	public ResponseEntity<Response> setColor(@RequestHeader String token,@PathVariable Long noteId,@RequestParam String color){
+		if(noteService.setColor(token, noteId, color)) {
+			return new ResponseEntity<>(new Response(HttpStatus.OK.value(),"color added"),HttpStatus.OK);
+
+		}
+		return new ResponseEntity<>(new Response(HttpStatus.BAD_REQUEST.value(),"color not added"),HttpStatus.BAD_REQUEST);
+
+	}
 	
 	
 

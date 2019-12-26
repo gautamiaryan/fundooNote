@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoo.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -94,5 +95,144 @@ public class NoteDAOImpl implements INoteDAO {
 		Query<Note> query = currentSession.createQuery("from Note where user_id=" + userId + "and note_pin=true",Note.class);
 		return query.getResultList();
 	}
+
+	@Override
+	public List<Note> getNotesOfSameLabel(Long userId, Long labelId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Query<Note> query=currentSession.createQuery("from Note where user_id"+userId+"and labelId="+labelId,Note.class);
+		return query.getResultList();
+	}
+
+	@Override
+	public boolean setRestored(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+		if(note.isTrashed()) {
+			note.setTrashed(false);
+			note.setUpdatedStamp(LocalDateTime.now());
+			currentSession.save(note);
+			return true;
+		}
+		return false;
+		}
+		
+		return false;
+		
+	}
+
+	@Override
+	public boolean setTrashed(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+		if(!note.isTrashed()) {
+			note.setTrashed(true);
+			note.setUpdatedStamp(LocalDateTime.now());
+			currentSession.save(note);
+			return true;
+		}
+		return false;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean setArchieved(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			if(!note.isArchieve()) {
+				note.setArchieve(true);
+				note.setPinned(false);
+				note.setUpdatedStamp(LocalDateTime.now());
+				currentSession.save(note);
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean setUnachieved(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			if(note.isArchieve()) {
+				note.setArchieve(false);
+				note.setUpdatedStamp(LocalDateTime.now());
+				currentSession.save(note);
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean setPinned(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			if(!note.isPinned()) {
+				note.setArchieve(false);
+				note.setPinned(true);
+				note.setTrashed(false);
+				note.setUpdatedStamp(LocalDateTime.now());
+				currentSession.save(note);
+				return true;
+			}
+			return false;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean setUnpinned(Long userId, Long noteId) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			if(note.isPinned()) {
+				note.setPinned(false);
+				note.setUpdatedStamp(LocalDateTime.now());
+				currentSession.save(note);
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean setRemaineder(Long userId, Long noteId, LocalDateTime time) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note=getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			note.setRemainder(time);
+			currentSession.save(note);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean setColor(Long userId, Long noteId, String color) {
+		Session currentSession=entityManager.unwrap(Session.class);
+		Note note =getNoteById(noteId);
+		if(note.getUserId().equals(userId)) {
+			note.setColor(color);
+			currentSession.save(note);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
 
 }

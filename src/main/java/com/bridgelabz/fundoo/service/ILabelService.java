@@ -14,4 +14,6 @@ public interface ILabelService {
 	boolean isUpadated(Integer labelId,LabelDTO labelDTO,String token);
 	
 	List<Label> getAllLabel(String token);
+	
+	
 }
